@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexArmorX | Certificate Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #05070a;
+            --clay-bg: #0f172a;
+            --accent-green: #22c55e;
+            --clay-shadow: 10px 10px 20px #020617, -5px -5px 15px rgba(255,255,255,0.02);
+        }
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 2px 2px, #1e293b 1px, transparent 0);
+            background-size: 40px 40px;
+            font-family: 'Space Grotesk', sans-serif;
+            color: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .clay-card {
+            background: var(--clay-bg);
+            border-radius: 32px;
+            box-shadow: var(--clay-shadow);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            padding: 3rem;
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .verify-badge {
+            width: 80px;
+            height: 80px;
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid var(--accent-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: var(--accent-green);
+            font-size: 2rem;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+        }
+        .data-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="clay-card">
+        <div class="verify-badge">
+            <i class="fas fa-check-double"></i>
+        </div>
+
+        <h1 class="text-2xl font-bold text-white mb-2 italic">VERIFIED BY APEXARMORX</h1>
+        <p class="text-slate-400 text-sm mb-8">This official record confirms that the individual listed below has successfully completed the Cyber Defense Challenge 2026.</p>
+
+        <div class="space-y-6 text-left border-t border-slate-800 pt-8">
+            <div>
+                <p class="data-label">Full Name</p>
+                <p class="text-white font-bold text-lg italic">Balaji R</p>
+            </div>
+
+            <div>
+                <p class="data-label">Challenge Completed</p>
+                <p class="text-sky-400 font-bold">Cyber Defense Challenge 2026</p>
+            </div>
+
+            <div class="flex justify-between">
+                <div>
+                    <p class="data-label">Date Issued</p>
+                    <p class="text-white font-bold">Jan 20, 2026</p>
+                </div>
+                <div>
+                    <p class="data-label">Certificate ID</p>
+                    <p class="text-white font-bold">AAX-2026-0127</p>
+                </div>
+            </div>
+
+            <div class="bg-black/40 p-4 rounded-2xl border border-slate-800 text-center">
+                <p class="text-[10px] text-slate-500 italic uppercase">Security Status</p>
+                <p class="text-green-500 font-bold tracking-widest text-xs">● GENUINE RECORD</p>
+            </div>
+        </div>
+
+        <footer class="mt-10 pt-6 border-t border-slate-800">
+            <div class="text-sm font-bold text-slate-500 italic">APEX<span class="text-sky-400">ARMOR</span>X</div>
+            <p class="text-[9px] text-slate-600 uppercase tracking-widest mt-2">Verified Digital Achievement Registry</p>
+        </footer>
+    </div>
+
+</body>
+</html>
