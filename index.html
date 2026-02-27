@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApexArmorX | Modern Digital Defense</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #05070a;
+            --clay-bg: #0f172a;
+            --accent-blue: #38bdf8;
+            --clay-shadow: 10px 10px 20px #020617, -5px -5px 15px rgba(255,255,255,0.02);
+        }
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at 2px 2px, #1e293b 1px, transparent 0);
+            background-size: 40px 40px;
+            font-family: 'Space Grotesk', sans-serif;
+            color: #f1f5f9;
+        }
+        .clay-card {
+            background: var(--clay-bg);
+            border-radius: 24px;
+            box-shadow: var(--clay-shadow);
+            border: 1px solid rgba(56, 189, 248, 0.1);
+            transition: all 0.3s ease;
+        }
+        .clay-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);
+        }
+        .clay-button {
+            background: var(--accent-blue);
+            color: #000;
+            border-radius: 12px;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.3);
+        }
+        .clay-button:hover {
+            background: #fff;
+            box-shadow: 0 0 25px rgba(56, 189, 248, 0.5);
+        }
+        .glow-text {
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
+        }
+        .step-line {
+            position: relative;
+        }
+        .step-line::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-blue), transparent);
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <nav class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-16 gap-6">
+        <div class="text-2xl font-bold tracking-tighter glow-text">
+            <span class="text-white">APEX</span><span class="text-sky-400">ARMOR</span>X
+        </div>
+        <div class="flex gap-8 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+            <a href="#about" class="hover:text-sky-400 transition-colors">Our Goal</a>
+            <a href="#how-it-works" class="hover:text-sky-400 transition-colors">How it works</a>
+            <a href="#education" class="hover:text-sky-400 transition-colors">Learning</a>
+            <a href="#events" class="hover:text-sky-400 transition-colors">Events</a>
+            <a href="#contact" class="hover:text-sky-400 transition-colors">Collab</a>
+        </div>
+    </nav>
+
+    <header class="max-w-6xl mx-auto text-center mb-32">
+        <div class="inline-block px-4 py-1 mb-6 border border-sky-500/30 rounded-full text-sky-400 text-[10px] font-bold uppercase tracking-[0.2em]">
+            Digital Defense Collective
+        </div>
+        <h1 class="text-5xl md:text-7xl font-bold mb-6 text-white leading-tight italic">Stronger habits. <br><span class="text-sky-400">Better safety.</span></h1>
+        <p class="text-lg text-slate-400 max-w-2xl mx-auto mb-10">We help you build a "digital shield" around your life. We teach you how to spot threats and stay safe through real-world practice.</p>
+        <div class="flex justify-center gap-6">
+            <a href="#events" class="clay-button px-8 py-4">Explore Operations</a>
+        </div>
+    </header>
+
+    <section class="max-w-6xl mx-auto mb-32">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="clay-card p-10 flex flex-col items-center">
+                <div class="w-16 h-16 rounded-full bg-sky-500/10 flex items-center justify-center mb-6">
+                    <i class="fas fa-fingerprint text-sky-400 text-2xl"></i>
+                </div>
+                <h4 class="text-white font-bold mb-2">Unique Defenses</h4>
+                <p class="text-slate-500 text-sm text-center">We have helped over 1,500 people build safety habits that match how they personally use their devices.</p>
+            </div>
+            <div class="clay-card p-10 flex flex-col items-center">
+                <div class="w-16 h-16 rounded-full bg-sky-500/10 flex items-center justify-center mb-6">
+                    <i class="fas fa-earth-americas text-sky-400 text-2xl"></i>
+                </div>
+                <h4 class="text-white font-bold mb-2">Community Reach</h4>
+                <p class="text-slate-500 text-sm text-center">From schools to local groups, we’ve held 45+ sessions to make the web a safer place for everyone.</p>
+            </div>
+            <div class="clay-card p-10 flex flex-col items-center">
+                <div class="w-16 h-16 rounded-full bg-sky-500/10 flex items-center justify-center mb-6">
+                    <i class="fas fa-shield-virus text-sky-400 text-2xl"></i>
+                </div>
+                <h4 class="text-white font-bold mb-2">Active Training</h4>
+                <p class="text-slate-500 text-sm text-center">Our 12 learning tracks aren't just for reading—they are live environments where you learn by doing.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="max-w-4xl mx-auto mb-32">
+        <h2 class="text-3xl font-bold text-white mb-12 text-center italic">The Apex Path</h2>
+        <div class="space-y-12">
+            <div class="step-line flex gap-8">
+                <div class="w-10 h-10 rounded-full bg-sky-500 flex-shrink-0 flex items-center justify-center text-black font-bold z-10">1</div>
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-2">Find Your Gaps</h3>
+                    <p class="text-slate-500">We start by showing you where your digital life might be open to risks without you knowing it.</p>
+                </div>
+            </div>
+            <div class="step-line flex gap-8">
+                <div class="w-10 h-10 rounded-full bg-sky-500 flex-shrink-0 flex items-center justify-center text-black font-bold z-10">2</div>
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-2">Build Your Shield</h3>
+                    <p class="text-slate-500">You participate in live missions to practice locking down your accounts and spotting tricks.</p>
+                </div>
+            </div>
+            <div class="flex gap-8">
+                <div class="w-10 h-10 rounded-full bg-sky-500 flex-shrink-0 flex items-center justify-center text-black font-bold z-10">3</div>
+                <div>
+                    <h3 class="text-xl font-bold text-white mb-2">Stay Protected</h3>
+                    <p class="text-slate-500">You walk away with simple habits that keep you safe every single day.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="education" class="max-w-6xl mx-auto mb-32">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl font-bold text-white mb-4 italic">Learning by Doing</h2>
+            <p class="text-slate-400">Our approach focuses on turning knowledge into action.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="p-8 border-l-4 border-sky-400 bg-slate-900/40 rounded-r-2xl">
+                <i class="fas fa-eye text-sky-400 mb-4"></i>
+                <h3 class="font-bold text-white mb-2">Spotting Risks</h3>
+                <p class="text-sm text-slate-500">We show you how scams work so you can see them coming from a mile away.</p>
+            </div>
+            <div class="p-8 border-l-4 border-sky-400 bg-slate-900/40 rounded-r-2xl">
+                <i class="fas fa-hand-fist text-sky-400 mb-4"></i>
+                <h3 class="font-bold text-white mb-2">Quick Action</h3>
+                <p class="text-sm text-slate-500">Learn exactly how to lock down your accounts if something feels wrong.</p>
+            </div>
+            <div class="p-8 border-l-4 border-sky-400 bg-slate-900/40 rounded-r-2xl">
+                <i class="fas fa-heart-pulse text-sky-400 mb-4"></i>
+                <h3 class="font-bold text-white mb-2">Daily Habits</h3>
+                <p class="text-sm text-slate-500">Simple actions you can take every day to keep your private life private.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto mb-32">
+        <h2 class="text-2xl font-bold text-white mb-10 text-center uppercase tracking-widest italic">Quick Safety Tips</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="clay-card p-6 flex gap-6 items-center">
+                <div class="text-3xl text-sky-400"><i class="fas fa-mobile-screen-button"></i></div>
+                <p class="text-sm text-slate-400">Always check your phone's "App Permissions" and turn off camera or mic access for apps that don't need them.</p>
+            </div>
+            <div class="clay-card p-6 flex gap-6 items-center">
+                <div class="text-3xl text-sky-400"><i class="fas fa-key"></i></div>
+                <p class="text-sm text-slate-400">Use a "Screen Lock" on every device. It's the simplest way to protect your photos if you ever lose your phone.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="events" class="max-w-6xl mx-auto mb-32">
+        <h2 class="text-3xl font-bold text-white mb-10 text-center uppercase tracking-widest">Operations</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="clay-card p-10 bg-slate-900/60">
+                <div class="flex justify-between items-start mb-6">
+                    <h3 class="text-xl font-bold text-white">Cyber Defense Challenge 2026</h3>
+                    <span class="text-sky-400 text-[10px] font-bold border border-sky-400 px-2 py-1">ENDED</span>
+                </div>
+                <p class="text-slate-500 mb-8">An International CTF to demonstrate Cybersecurity Theory, Phishing Detection, and OSINT Analysis</p>
+                <button onclick="openModal()" class="w-full py-4 border border-slate-700 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">View Winners</button>
+            </div>
+            <div class="clay-card p-10 opacity-20 border-dashed border-slate-700 pointer-events-none">
+                <h3 class="text-xl font-bold text-slate-500 mb-2 italic">Upcoming</h3>
+                <p class="text-slate-600 mb-8">New training is currently in progress. Stay tuned for the next mission.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="max-w-6xl mx-auto mb-32">
+        <div class="clay-card p-12 text-center bg-white/5">
+            <h2 class="text-xl font-bold text-white mb-6 uppercase tracking-widest">Our Promise to You</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div>
+                    <i class="fas fa-user-secret text-sky-400 mb-4 block text-2xl"></i>
+                    <p class="text-[11px] text-slate-500 uppercase font-bold mb-2">Zero Tracking</p>
+                    <p class="text-xs text-slate-400">We never store your personal details during our training sessions.</p>
+                </div>
+                <div>
+                    <i class="fas fa-handshake text-sky-400 mb-4 block text-2xl"></i>
+                    <p class="text-[11px] text-slate-500 uppercase font-bold mb-2">Community First</p>
+                    <p class="text-xs text-slate-400">Basic safety education will always be free for everyone.</p>
+                </div>
+                <div>
+                    <i class="fas fa-code text-sky-400 mb-4 block text-2xl"></i>
+                    <p class="text-[11px] text-slate-500 uppercase font-bold mb-2">Proven Results</p>
+                    <p class="text-xs text-slate-400">Our methods are tested by security professionals for real-world effectiveness.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="max-w-6xl mx-auto mb-32 text-center">
+        <div class="clay-card p-12 md:p-20 bg-gradient-to-b from-slate-900 to-black">
+            <h2 class="text-4xl font-bold text-white mb-6 italic">Collaborate with ApexArmorX</h2>
+            <p class="text-slate-400 mb-10 max-w-xl mx-auto">Are you a school, college, or community group? Let's host a safety event together.</p>
+            <div class="flex justify-center">
+                <form class="w-full max-w-md flex flex-col gap-4">
+                    <input type="text" placeholder="Your Name" class="bg-black border border-slate-800 p-4 rounded-xl outline-none focus:border-sky-400">
+                    <input type="email" placeholder="Your Email" class="bg-black border border-slate-800 p-4 rounded-xl outline-none focus:border-sky-400">
+                    <button class="clay-button py-4 uppercase text-xs tracking-widest">Send Message</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="max-w-6xl mx-auto border-t border-slate-800 pt-12 pb-24 text-center">
+        <div class="text-2xl font-bold text-white italic mb-4">APEXARMORX</div>
+        <p class="text-slate-600 text-[10px] uppercase tracking-[0.5em]">Building Habits. Saving Lives. 2026.</p>
+    </footer>
+
+    <div id="modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
+        <div class="clay-card w-full max-w-sm p-10 bg-slate-900 border-sky-500">
+            <h2 class="text-xl font-bold mb-8 text-sky-400 text-center uppercase tracking-widest italic">Top Performers</h2>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center p-3 border-b border-slate-800">
+                    <span class="text-white font-bold">1. Andrew Rowland (Texas)</span>
+                    <span class="text-sky-400">290 Pts</span>
+                </div>
+                <div class="flex justify-between items-center p-3 border-b border-slate-800">
+                    <span class="text-white font-bold">2. Aathithya S (India)</span>
+                    <span class="text-sky-400">275 Pts</span>
+                </div>
+                <div class="flex justify-between items-center p-3 border-b border-slate-800">
+                    <span class="text-white font-bold">3. Balaji R (India)</span>
+                    <span class="text-sky-400">268 Pts</span>
+                </div>
+            </div>
+            <button onclick="closeModal()" class="w-full py-4 mt-10 text-[10px] font-bold text-slate-500 hover:text-white uppercase tracking-widest">Return</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal() { document.getElementById('modal').classList.remove('hidden'); }
+        function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+    </script>
+</body>
+</html>
