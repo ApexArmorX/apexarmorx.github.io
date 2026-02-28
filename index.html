@@ -64,16 +64,23 @@
 </head>
 <body class="p-4 md:p-8">
 
-    <nav class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-16 gap-6">
+    <nav class="max-w-6xl mx-auto flex flex-wrap justify-between items-center mb-16 gap-6 relative">
         <div class="text-2xl font-bold tracking-tighter glow-text">
             <span class="text-white">APEX</span><span class="text-sky-400">ARMOR</span>X
         </div>
-        <div class="flex gap-8 text-[11px] font-bold uppercase tracking-widest text-slate-400">
-            <a href="#about" class="hover:text-sky-400 transition-colors">Our Goal</a>
-            <a href="#how-it-works" class="hover:text-sky-400 transition-colors">How it works</a>
-            <a href="#education" class="hover:text-sky-400 transition-colors">Learning</a>
-            <a href="#events" class="hover:text-sky-400 transition-colors">Events</a>
-            <a href="#contact" class="hover:text-sky-400 transition-colors">Collab</a>
+        
+        <button id="menu-toggle" class="md:hidden text-sky-400 text-2xl focus:outline-none">
+            <i class="fas fa-bars" id="menu-icon"></i>
+        </button>
+
+        <div id="nav-menu" class="hidden w-full md:flex md:w-auto md:static absolute top-full left-0 z-50 p-6 md:p-0 clay-card md:bg-transparent md:shadow-none md:border-none">
+            <div class="flex flex-col md:flex-row gap-8 text-[11px] font-bold uppercase tracking-widest text-slate-400">
+                <a href="#about" class="hover:text-sky-400 transition-colors" onclick="closeMenu()">Our Goal</a>
+                <a href="#how-it-works" class="hover:text-sky-400 transition-colors" onclick="closeMenu()">How it works</a>
+                <a href="#education" class="hover:text-sky-400 transition-colors" onclick="closeMenu()">Learning</a>
+                <a href="#events" class="hover:text-sky-400 transition-colors" onclick="closeMenu()">Events</a>
+                <a href="#contact" class="hover:text-sky-400 transition-colors" onclick="closeMenu()">Collab</a>
+            </div>
         </div>
     </nav>
 
@@ -261,9 +268,28 @@
     </div>
 
     <script>
+        // Navigation Logic
+        const menuToggle = document.getElementById('menu-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        const menuIcon = document.getElementById('menu-icon');
+
+        menuToggle.addEventListener('click', () => {
+            navMenu.classList.toggle('hidden');
+            menuIcon.classList.toggle('fa-bars');
+            menuIcon.classList.toggle('fa-xmark');
+        });
+
+        function closeMenu() {
+            if (window.innerWidth < 768) {
+                navMenu.classList.add('hidden');
+                menuIcon.classList.add('fa-bars');
+                menuIcon.classList.remove('fa-xmark');
+            }
+        }
+
+        // Modal Logic
         function openModal() { document.getElementById('modal').classList.remove('hidden'); }
         function closeModal() { document.getElementById('modal').classList.add('hidden'); }
     </script>
 </body>
-
 </html>
