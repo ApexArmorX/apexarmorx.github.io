@@ -191,15 +191,19 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="clay-card p-10 bg-slate-900/60">
                 <div class="flex justify-between items-start mb-6">
-                    <h3 class="text-xl font-bold text-white">Cyber Defense Challenge 2026</h3>
+                    <h3 class="text-xl font-bold text-white">Recon Sprint - CTF Challenge</h3>
+                    <span class="text-sky-400 text-[10px] font-bold border border-sky-400 px-2 py-1">02-03-2026</span>
+                </div>
+                <p class="text-slate-500 mb-8">Fast-paced capture the flag focusing on OSINT Techniques.</p>
+                <button onclick="openModal('micro')" class="w-full py-4 border border-slate-700 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">View Winners</button>
+            </div>
+            <div class="clay-card p-10 bg-slate-900/60">
+                <div class="flex justify-between items-start mb-6">
+                    <h3 class="text-xl font-bold text-white italic">Cyber Defense Challenge 2026</h3>
                     <span class="text-sky-400 text-[10px] font-bold border border-sky-400 px-2 py-1">28-02-2026</span>
                 </div>
                 <p class="text-slate-500 mb-8">An International CTF to demonstrate Cybersecurity Theory, Phishing Detection, and OSINT Analysis</p>
-                <button onclick="openModal()" class="w-full py-4 border border-slate-700 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">View Winners</button>
-            </div>
-            <div class="clay-card p-10 opacity-20 border-dashed border-slate-700 pointer-events-none">
-                <h3 class="text-xl font-bold text-slate-500 mb-2 italic">Upcoming</h3>
-                <p class="text-slate-600 mb-8">New training is currently in progress. Stay tuned for the next mission.</p>
+                <button onclick="openModal('cdc')" class="w-full py-4 border border-slate-700 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-white hover:text-black transition-all">View Winners</button>
             </div>
         </div>
     </section>
@@ -243,32 +247,52 @@
 
     <footer class="max-w-6xl mx-auto border-t border-slate-800 pt-12 pb-24 text-center">
         <div class="text-2xl font-bold text-white italic mb-4">APEXARMORX</div>
-        <p class="text-slate-600 text-[10px] uppercase tracking-[0.5em]">Building Habits. Saving Lives. 2026.</p>
+        <p class="text-slate-600 text-[10px] uppercase tracking-[0.5em] mb-4">Building Habits. Saving Lives. 2026.</p>
+        
+        <div class="opacity-10 text-[8px] font-mono tracking-tighter text-slate-800 hover:opacity-100 transition-opacity">
+            CTF_REF_ID: <span id="ref-id">A3X-2026</span>
+        </div>
     </footer>
 
     <div id="modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
         <div class="clay-card w-full max-w-sm p-10 bg-slate-900 border-sky-500">
-            <h2 class="text-xl font-bold mb-8 text-sky-400 text-center uppercase tracking-widest italic">Top Performers</h2>
-            <div class="space-y-4">
+            <h2 id="modal-title" class="text-xl font-bold mb-8 text-sky-400 text-center uppercase tracking-widest italic">Top Performers</h2>
+            
+            <div id="cdc-board" class="space-y-4">
                 <div class="flex justify-between items-center p-3 border-b border-slate-800">
-                    <span class="text-white font-bold">1. Player 1</span>
-                    <span class="text-sky-400">300 Pts</span>
+                    <span class="text-white font-bold">1. Benjamin A</span>
+                    <span class="text-sky-400">290 Pts</span>
                 </div>
                 <div class="flex justify-between items-center p-3 border-b border-slate-800">
-                    <span class="text-white font-bold">2. Player 2</span>
-                    <span class="text-sky-400">300 Pts</span>
+                    <span class="text-white font-bold">2. Aathithya S</span>
+                    <span class="text-sky-400">287 Pts</span>
                 </div>
                 <div class="flex justify-between items-center p-3 border-b border-slate-800">
-                    <span class="text-white font-bold">3. Player 3</span>
-                    <span class="text-sky-400">300 Pts</span>
+                    <span class="text-white font-bold">3. Usha Nandhini T</span>
+                    <span class="text-sky-400">274 Pts</span>
                 </div>
             </div>
+
+            <div id="micro-board" class="space-y-4 hidden">
+                <div class="flex justify-between items-center p-3 border-b border-slate-800">
+                    <span class="text-white font-bold">1. Aathithya S</span>
+                    <span class="text-sky-400 text-xs">Delivered: 12 Hours</span>
+                </div>
+                <div class="flex justify-between items-center p-3 border-b border-slate-800">
+                    <span class="text-white font-bold">2. Mohit Raj K</span>
+                    <span class="text-sky-400 text-xs">Delivered: 14.5 Hours</span>
+                </div>
+                <div class="flex justify-between items-center p-3 border-b border-slate-800">
+                    <span class="text-white font-bold">3. Favour John</span>
+                    <span class="text-sky-400 text-xs">Delivered: 17 Hours</span>
+                </div>
+            </div>
+
             <button onclick="closeModal()" class="w-full py-4 mt-10 text-[10px] font-bold text-slate-500 hover:text-white uppercase tracking-widest">Return</button>
         </div>
     </div>
 
     <script>
-        // Navigation Logic
         const menuToggle = document.getElementById('menu-toggle');
         const navMenu = document.getElementById('nav-menu');
         const menuIcon = document.getElementById('menu-icon');
@@ -287,8 +311,23 @@
             }
         }
 
-        // Modal Logic
-        function openModal() { document.getElementById('modal').classList.remove('hidden'); }
+        function openModal(type) { 
+            const title = document.getElementById('modal-title');
+            const cdcBoard = document.getElementById('cdc-board');
+            const microBoard = document.getElementById('micro-board');
+
+            if (type === 'cdc') {
+                title.innerText = 'Defense Challenge Board';
+                cdcBoard.classList.remove('hidden');
+                microBoard.classList.add('hidden');
+            } else {
+                title.innerText = 'Micro-CTF Delivery Times';
+                cdcBoard.classList.add('hidden');
+                microBoard.classList.remove('hidden');
+            }
+            document.getElementById('modal').classList.remove('hidden'); 
+        }
+
         function closeModal() { document.getElementById('modal').classList.add('hidden'); }
     </script>
 </body>
