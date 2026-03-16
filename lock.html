@@ -483,6 +483,7 @@ header {
     text-align: center;
     animation: fadeSlideUp 0.6s ease both;
     position: relative;
+    padding-bottom: 40px;
 }
 
 .canvas-wrap {
@@ -499,15 +500,16 @@ header {
 .vic-eyebrow {
     font-family: 'Fira Code', monospace;
     font-size: 11px;
-    letter-spacing: 6px;
+    letter-spacing: 3px;
     color: var(--green);
     margin-bottom: 16px;
     opacity: 0.8;
+    word-break: break-word;
 }
 
 .vic-title {
     font-family: 'Orbitron', monospace;
-    font-size: clamp(48px, 10vw, 80px);
+    font-size: clamp(40px, 10vw, 80px);
     font-weight: 900;
     color: var(--green);
     text-shadow: 0 0 40px rgba(0,255,136,0.5), 0 0 80px rgba(0,255,136,0.2);
@@ -524,21 +526,24 @@ header {
 
 .vic-subtitle {
     font-family: 'Fira Code', monospace;
-    font-size: 13px;
+    font-size: clamp(10px, 3vw, 13px);
     color: var(--muted);
-    margin-bottom: 40px;
-    letter-spacing: 2px;
+    margin-bottom: 32px;
+    letter-spacing: 1px;
+    word-break: break-word;
 }
 
 .vic-card {
     background: var(--surface);
     border: 1px solid rgba(0,255,136,0.2);
-    padding: 32px;
+    padding: clamp(16px, 5vw, 32px);
     max-width: 500px;
+    width: 100%;
     margin: 0 auto 24px;
     position: relative;
     z-index: 1;
     border-radius: 2px;
+    box-sizing: border-box;
 }
 
 .vic-card::before {
@@ -552,55 +557,61 @@ header {
 .vic-pw-label {
     font-family: 'Fira Code', monospace;
     font-size: 10px;
-    letter-spacing: 4px;
+    letter-spacing: 3px;
     color: var(--green);
-    margin-bottom: 12px;
+    margin-bottom: 10px;
     opacity: 0.7;
+    text-align: left;
 }
 
 #vpr-pw {
     font-family: 'Fira Code', monospace;
-    font-size: 15px;
+    font-size: clamp(12px, 3.5vw, 15px);
     color: white;
     word-break: break-all;
+    overflow-wrap: anywhere;
     line-height: 1.6;
     background: var(--bg);
-    padding: 14px;
+    padding: 12px;
     border: 1px solid rgba(0,255,136,0.15);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     text-align: left;
     border-radius: 2px;
 }
 
 .vic-stats {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 28px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
 .vic-stat {
     background: var(--bg);
-    padding: 14px;
+    padding: clamp(10px, 3vw, 14px) 8px;
     border: 1px solid var(--border);
     text-align: center;
     border-radius: 2px;
+    min-width: 0;
 }
 
 .vic-stat-num {
     font-family: 'Orbitron', monospace;
-    font-size: 22px;
+    font-size: clamp(14px, 4vw, 22px);
     font-weight: 700;
     color: var(--green);
     display: block;
+    word-break: break-all;
 }
 
 .vic-stat-label {
     font-family: 'Fira Code', monospace;
-    font-size: 9px;
-    letter-spacing: 2px;
+    font-size: clamp(7px, 2vw, 9px);
+    letter-spacing: 1px;
     color: var(--muted);
     text-transform: uppercase;
+    display: block;
+    margin-top: 2px;
 }
 
 .reset-btn {
@@ -609,9 +620,9 @@ header {
     border: 1px solid var(--green);
     color: var(--green);
     font-family: 'Orbitron', monospace;
-    font-size: 11px;
+    font-size: clamp(9px, 2.5vw, 11px);
     font-weight: 700;
-    letter-spacing: 4px;
+    letter-spacing: 3px;
     padding: 16px;
     text-transform: uppercase;
     cursor: pointer;
@@ -643,11 +654,13 @@ header {
     padding: 10px 20px;
     font-family: 'Fira Code', monospace;
     font-size: 12px;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     color: var(--cyan);
     z-index: 9999;
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    white-space: nowrap;
+    max-width: calc(100vw - 40px);
+    text-align: center;
+    word-break: break-word;
     border-radius: 2px;
     box-shadow: 0 4px 20px rgba(0,245,255,0.2);
 }
@@ -719,10 +732,10 @@ header {
 /* ── CALCULATOR FAB ── */
 .calc-fab {
     position: fixed;
-    bottom: 28px;
-    right: 28px;
-    width: 60px;
-    height: 60px;
+    bottom: 24px;
+    right: 20px;
+    width: 56px;
+    height: 56px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 50%;
@@ -760,7 +773,7 @@ header {
     position: fixed;
     bottom: 100px;
     right: 28px;
-    width: 280px;
+    width: min(280px, calc(100vw - 40px));
     background: var(--surface);
     border: 1px solid rgba(0,245,255,0.2);
     border-radius: 4px;
