@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>THE LOCK — Can you make the perfect password?</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Fira+Code:wght@300;400;600&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+    --bg: #020409;
+    --surface: #080d1a;
+    --surface2: #0c1428;
+    --cyan: #00f5ff;
+    --cyan-dim: rgba(0,245,255,0.15);
+    --cyan-glow: rgba(0,245,255,0.4);
+    --red: #ff2d55;
+    --green: #00ff88;
+    --amber: #ffbe00;
+    --text: #c8d8e8;
+    --muted: #3a5068;
+    --border: rgba(0,245,255,0.12);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+    background-color: var(--bg);
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ── NOISE + SCANLINES ── */
+body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.07) 2px,
+        rgba(0,0,0,0.07) 4px
+    );
+    pointer-events: none;
+    z-index: 9998;
+}
+
+body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse at 30% 20%, rgba(0,245,255,0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(0,100,255,0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── GRID BG ── */
+.grid-bg {
+    position: fixed; inset: 0;
+    background-image:
+        linear-gradient(rgba(0,245,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,245,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 0;
+}
+
+#app {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px 20px 80px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── HEADER ── */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+}
+.logo .accent { color: var(--cyan); text-shadow: 0 0 20px var(--cyan); }
+
+.header-right { display: flex; align-items: center; gap: 20px; }
+
+#timer {
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px var(--cyan-glow);
+}
+
+.status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 10px var(--green);
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+    0%,100% { opacity:1; box-shadow: 0 0 10px var(--green); }
+    50% { opacity:0.4; box-shadow: 0 0 4px var(--green); }
+}
+
+/* ── INTRO ── */
+#screen-intro { text-align: center; animation: fadeSlideUp 0.6s ease both; }
+
+@keyframes fadeSlideUp {
+    from { opacity:0; transform: translateY(30px); }
+    to { opacity:1; transform: translateY(0); }
+}
+
+.intro-eyebrow {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.7;
+}
+
+.intro-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(56px, 12vw, 100px);
+    font-weight: 900;
+    line-height: 0.9;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.intro-title .line1 { display: block; color: var(--text); }
+.intro-title .line2 {
+    display: block;
+    color: var(--cyan);
+    text-shadow: 0 0 40px var(--cyan-glow), 0 0 80px rgba(0,245,255,0.2);
+    -webkit-text-stroke: 1px var(--cyan);
+}
+
+.intro-sub {
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 50px;
+    letter-spacing: 1px;
+}
+
+.setup-form {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 32px;
+    max-width: 440px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.setup-form::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    animation: scanline 3s linear infinite;
+}
+
+@keyframes scanline {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.form-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: block;
+    opacity: 0.8;
+}
+
+.field-group { margin-bottom: 18px; }
+
+.setup-input {
+    width: 100%;
+    background: rgba(0,245,255,0.03);
+    border: 1px solid rgba(0,245,255,0.15);
+    border-radius: 2px;
+    padding: 12px 14px;
+    color: white;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.setup-input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 1px var(--cyan-dim), inset 0 0 20px rgba(0,245,255,0.03);
+}
+
+.setup-input::placeholder { color: var(--muted); font-size: 12px; }
+
+.start-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--cyan);
+    color: var(--cyan);
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    padding: 16px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.start-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--cyan);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 0;
+}
+.start-btn:hover::before { transform: translateX(0); }
+.start-btn:hover { color: #000; }
+.start-btn span { position: relative; z-index: 1; }
+
+/* ── GAME ── */
+#screen-game { display: none; animation: fadeSlideUp 0.4s ease both; }
+
+/* Progress */
+.progress-wrap { margin-bottom: 28px; }
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.progress-label-left {
+    font-family: 'Fira Code', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+}
+
+.progress-label-right {
+    font-family: 'Orbitron', monospace;
+    font-size: 12px;
+    color: var(--cyan);
+}
+
+.progress-track {
+    height: 3px;
+    background: var(--surface2);
+    border-radius: 0;
+    overflow: visible;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--cyan), #00aaff);
+    width: 0%;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 0 12px var(--cyan-glow);
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -3px;
+    width: 3px;
+    height: 9px;
+    background: white;
+    box-shadow: 0 0 8px white;
+}
+
+/* Input panel */
+.input-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    margin-bottom: 24px;
+    position: relative;
+    border-radius: 2px;
+}
+
+.input-panel-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0.6;
+}
+
+.pw-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid rgba(0,245,255,0.15);
+    border-radius: 2px;
+    padding: 16px 18px;
+    color: var(--cyan);
+    font-family: 'Fira Code', monospace;
+    font-size: 16px;
+    letter-spacing: 1px;
+    outline: none;
+    margin-bottom: 16px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    caret-color: var(--cyan);
+}
+.pw-input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 1px var(--cyan-dim);
+}
+
+/* Strength meter */
+.strength-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.strength-bars { display: flex; gap: 3px; flex: 1; }
+.strength-bar {
+    flex: 1;
+    height: 4px;
+    background: var(--surface2);
+    border-radius: 0;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+.strength-bar.lit-red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+.strength-bar.lit-amber { background: var(--amber); box-shadow: 0 0 6px var(--amber); }
+.strength-bar.lit-green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+
+#strength-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    width: 100px;
+    text-align: right;
+    transition: color 0.3s;
+}
+
+.stats-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat-item {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+.stat-item .val {
+    color: var(--cyan);
+    margin-left: 4px;
+}
+
+#crack-time { color: var(--red); transition: color 0.4s; }
+#crack-time.safe { color: var(--green); }
+
+/* Rules */
+.rules-section-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+
+.rule-card {
+    background: var(--surface);
+    border: 1px solid transparent;
+    border-left: 2px solid var(--muted);
+    padding: 14px 18px;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    border-radius: 0 2px 2px 0;
+    animation: ruleReveal 0.4s ease both;
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes ruleReveal {
+    from { opacity:0; transform: translateX(-20px); }
+    to { opacity:1; transform: translateX(0); }
+}
+
+.rule-card.passing {
+    border-left-color: var(--green);
+    background: rgba(0,255,136,0.04);
+    opacity: 0.55;
+}
+
+.rule-card.failing {
+    border-left-color: var(--cyan);
+    background: rgba(0,245,255,0.04);
+}
+
+.rule-card.new-unlock {
+    animation: unlockFlash 0.5s ease both;
+}
+
+@keyframes unlockFlash {
+    0% { opacity:0; transform: translateX(-20px); background: rgba(0,245,255,0.2); }
+    50% { background: rgba(0,245,255,0.12); }
+    100% { opacity:1; transform: translateX(0); background: rgba(0,245,255,0.04); }
+}
+
+.rule-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.rule-text {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    flex: 1;
+}
+
+.rule-text strong { color: var(--cyan); font-weight: 700; }
+
+.rule-icon {
+    font-family: 'Fira Code', monospace;
+    font-size: 16px;
+    width: 28px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.rule-card.passing .rule-icon { color: var(--green); }
+.rule-card.failing .rule-icon { color: var(--red); }
+
+.rule-num {
+    font-family: 'Fira Code', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+}
+
+/* ── VICTORY ── */
+#screen-victory {
+    display: none;
+    text-align: center;
+    animation: fadeSlideUp 0.6s ease both;
+    position: relative;
+}
+
+.canvas-wrap {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 0;
+}
+
+#matrix-canvas {
+    width: 100%; height: 100%;
+    opacity: 0.15;
+}
+
+.vic-eyebrow {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    letter-spacing: 6px;
+    color: var(--green);
+    margin-bottom: 16px;
+    opacity: 0.8;
+}
+
+.vic-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(48px, 10vw, 80px);
+    font-weight: 900;
+    color: var(--green);
+    text-shadow: 0 0 40px rgba(0,255,136,0.5), 0 0 80px rgba(0,255,136,0.2);
+    margin-bottom: 8px;
+    animation: glitch 2s infinite;
+}
+
+@keyframes glitch {
+    0%,90%,100% { clip-path: none; transform: none; }
+    92% { clip-path: polygon(0 15%, 100% 15%, 100% 30%, 0 30%); transform: translateX(-4px); }
+    93% { clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%); transform: translateX(4px); }
+    94% { clip-path: none; transform: none; }
+}
+
+.vic-subtitle {
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 40px;
+    letter-spacing: 2px;
+}
+
+.vic-card {
+    background: var(--surface);
+    border: 1px solid rgba(0,255,136,0.2);
+    padding: 32px;
+    max-width: 500px;
+    margin: 0 auto 24px;
+    position: relative;
+    z-index: 1;
+    border-radius: 2px;
+}
+
+.vic-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--green), transparent);
+}
+
+.vic-pw-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--green);
+    margin-bottom: 12px;
+    opacity: 0.7;
+}
+
+#vpr-pw {
+    font-family: 'Fira Code', monospace;
+    font-size: 15px;
+    color: white;
+    word-break: break-all;
+    line-height: 1.6;
+    background: var(--bg);
+    padding: 14px;
+    border: 1px solid rgba(0,255,136,0.15);
+    margin-bottom: 24px;
+    text-align: left;
+    border-radius: 2px;
+}
+
+.vic-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+.vic-stat {
+    background: var(--bg);
+    padding: 14px;
+    border: 1px solid var(--border);
+    text-align: center;
+    border-radius: 2px;
+}
+
+.vic-stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--green);
+    display: block;
+}
+
+.vic-stat-label {
+    font-family: 'Fira Code', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+}
+
+.reset-btn {
+    width: 100%;
+    background: transparent;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    padding: 16px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+    border-radius: 2px;
+}
+.reset-btn::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--green);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+.reset-btn:hover::before { transform: translateX(0); }
+.reset-btn:hover { color: #000; }
+.reset-btn span { position: relative; z-index: 1; }
+
+/* ── TOAST ── */
+#toast {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-80px);
+    background: var(--surface2);
+    border: 1px solid var(--cyan);
+    border-left: 3px solid var(--cyan);
+    padding: 10px 20px;
+    font-family: 'Fira Code', monospace;
+    font-size: 12px;
+    letter-spacing: 2px;
+    color: var(--cyan);
+    z-index: 9999;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+    border-radius: 2px;
+    box-shadow: 0 4px 20px rgba(0,245,255,0.2);
+}
+
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── GLITCH TEXT UTIL ── */
+.glitch-text {
+    position: relative;
+}
+.glitch-text::before, .glitch-text::after {
+    content: attr(data-text);
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 100%;
+}
+.glitch-text::before {
+    color: var(--red);
+    clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+    animation: glitch-a 4s infinite linear;
+    opacity: 0;
+}
+.glitch-text::after {
+    color: #00f;
+    clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+    animation: glitch-b 4s infinite linear 0.1s;
+    opacity: 0;
+}
+@keyframes glitch-a {
+    92% { opacity:0; transform: none; }
+    93% { opacity:0.8; transform: translateX(3px); }
+    94% { opacity:0; transform: none; }
+}
+@keyframes glitch-b {
+    92% { opacity:0; transform: none; }
+    93% { opacity:0.6; transform: translateX(-3px); }
+    94% { opacity:0; transform: none; }
+}
+
+/* ── OTP BANNER ── */
+.otp-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255,45,85,0.08);
+    border: 1px solid rgba(255,45,85,0.35);
+    border-left: 3px solid var(--red);
+    padding: 10px 16px;
+    margin-bottom: 16px;
+    border-radius: 2px;
+    animation: fadeSlideUp 0.3s ease both;
+}
+.otp-banner-left {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Fira Code', monospace;
+    font-size: 12px;
+    color: var(--text);
+}
+.otp-blink { color: var(--red); animation: blink 0.7s step-end infinite; font-size: 16px; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.otp-countdown-wrap { position: relative; width: 36px; height: 36px; }
+.otp-secs {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: var(--cyan);
+}
+
+/* ── CALCULATOR FAB ── */
+.calc-fab {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    width: 60px;
+    height: 60px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,245,255,0.1);
+    transition: all 0.2s;
+    flex-direction: column;
+    gap: 2px;
+}
+.calc-fab:hover {
+    border-color: var(--cyan);
+    box-shadow: 0 4px 24px rgba(0,245,255,0.2);
+    transform: scale(1.08);
+}
+.calc-fab.visible { display: flex; animation: fabPop 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes fabPop {
+    from { transform: scale(0) rotate(-20deg); opacity:0; }
+    to   { transform: scale(1) rotate(0); opacity:1; }
+}
+.calc-fab-hint {
+    font-family: 'Fira Code', monospace;
+    font-size: 7px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    line-height: 1;
+}
+
+/* ── CALCULATOR PANEL ── */
+.calc-panel {
+    position: fixed;
+    bottom: 100px;
+    right: 28px;
+    width: 280px;
+    background: var(--surface);
+    border: 1px solid rgba(0,245,255,0.2);
+    border-radius: 4px;
+    z-index: 501;
+    display: none;
+    flex-direction: column;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,245,255,0.05);
+    animation: calcSlide 0.25s cubic-bezier(0.34,1.56,0.64,1) both;
+    overflow: hidden;
+}
+.calc-panel.open { display: flex; }
+@keyframes calcSlide {
+    from { transform: translateY(20px) scale(0.95); opacity:0; }
+    to   { transform: translateY(0) scale(1); opacity:1; }
+}
+
+.calc-header {
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+}
+.calc-title {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    display: block;
+}
+.calc-subtitle {
+    font-family: 'Fira Code', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    display: block;
+    margin-top: 2px;
+    font-style: italic;
+}
+.calc-close {
+    position: absolute; top: 10px; right: 12px;
+    background: none; border: none;
+    color: var(--muted); font-size: 14px;
+    cursor: pointer; padding: 4px;
+    transition: color 0.2s;
+}
+.calc-close:hover { color: var(--red); }
+
+.calc-display-wrap {
+    background: var(--bg);
+    padding: 10px 14px 8px;
+    text-align: right;
+    border-bottom: 1px solid var(--border);
+    min-height: 68px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+}
+.calc-expr {
+    font-family: 'Fira Code', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    min-height: 16px;
+    word-break: break-all;
+}
+.calc-display {
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    color: var(--cyan);
+    text-shadow: 0 0 16px var(--cyan-glow);
+    word-break: break-all;
+    transition: color 0.2s;
+}
+.calc-display.error { color: var(--red); font-size: 16px; }
+
+.calc-keys {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: rgba(0,0,0,0.3);
+    padding: 1px;
+}
+.ck {
+    background: var(--surface2);
+    border: none;
+    color: var(--text);
+    font-family: 'Fira Code', monospace;
+    font-size: 16px;
+    padding: 16px 0;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    text-align: center;
+}
+.ck:hover { background: rgba(0,245,255,0.1); }
+.ck:active { background: rgba(0,245,255,0.2); }
+.ck-fn { color: var(--muted); font-size: 13px; }
+.ck-op { color: var(--cyan); font-size: 18px; }
+.ck-zero { grid-column: span 2; text-align: left; padding-left: 24px; }
+.ck-eq { background: var(--cyan); color: #000; font-size: 18px; }
+.ck-eq:hover { background: white; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--muted); }
+::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+/* ── UTILS ── */
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<div id="app">
+    <header>
+        <div class="logo">APEX<span class="accent">:LOCK</span></div>
+        <div class="header-right">
+            <div class="status-dot" id="status-dot"></div>
+            <div id="timer">00:00</div>
+        </div>
+    </header>
+
+    <!-- ══ INTRO ══ -->
+    <div id="screen-intro">
+        <p class="intro-eyebrow">// how strong is your password, really?</p>
+        <h1 class="intro-title glitch-text" data-text="THE LOCK">
+            <span class="line1">THE</span>
+            <span class="line2">LOCK</span>
+        </h1>
+        <p class="intro-sub">// make the ultimate password. follow the rules. good luck 😬</p>
+
+        <div class="setup-form">
+            <div class="field-group">
+                <label class="form-label">YOUR NAME</label>
+                <input class="setup-input" id="inp-name" placeholder="e.g. alice" autocomplete="off">
+            </div>
+            <div class="field-group">
+                <label class="form-label">YEAR YOU WERE BORN</label>
+                <input class="setup-input" id="inp-year" placeholder="e.g. 1990" type="number" autocomplete="off">
+            </div>
+            <div class="field-group">
+                <label class="form-label">YOUR PET OR BEST FRIEND'S NAME</label>
+                <input class="setup-input" id="inp-pet" placeholder="e.g. fluffy / jake" autocomplete="off">
+            </div>
+            <div class="field-group">
+                <label class="form-label">YOUR CITY</label>
+                <input class="setup-input" id="inp-city" placeholder="e.g. boston" autocomplete="off">
+            </div>
+            <button class="start-btn" onclick="startGame()">
+                <span>▶ LET'S GO</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ══ GAME ══ -->
+    <div id="screen-game">
+        <!-- Progress -->
+        <div class="progress-wrap">
+            <div class="progress-header">
+                <span class="progress-label-left">// rules cleared</span>
+                <span class="progress-label-right" id="progress-label">0 / 0</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div class="input-panel">
+            <div class="input-panel-label">// type your password here</div>
+            <input type="text" class="pw-input" id="pw-input" placeholder="start typing..." oninput="onPasswordInput()" autocomplete="off" autocorrect="off" spellcheck="false">
+
+            <div class="strength-row">
+                <div class="strength-bars" id="strength-bars">
+                    <div class="strength-bar" id="sb1"></div>
+                    <div class="strength-bar" id="sb2"></div>
+                    <div class="strength-bar" id="sb3"></div>
+                    <div class="strength-bar" id="sb4"></div>
+                    <div class="strength-bar" id="sb5"></div>
+                    <div class="strength-bar" id="sb6"></div>
+                    <div class="strength-bar" id="sb7"></div>
+                    <div class="strength-bar" id="sb8"></div>
+                </div>
+                <span id="strength-label" style="color:var(--muted)">EMPTY</span>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-item">entropy <span class="val" id="entropy">0</span></div>
+                <div class="stat-item">length <span class="val" id="pw-len">0</span></div>
+                <div class="stat-item">status <span id="crack-time">VULNERABLE</span></div>
+            </div>
+        </div>
+
+        <!-- OTP Countdown -->
+        <div id="otp-banner" class="otp-banner hidden">
+            <div class="otp-banner-left">
+                <span class="otp-blink">⚠</span>
+                <span id="otp-banner-text"></span>
+            </div>
+            <div class="otp-countdown-wrap">
+                <svg width="36" height="36" viewBox="0 0 36 36">
+                    <circle cx="18" cy="18" r="15" fill="none" stroke="rgba(0,245,255,0.15)" stroke-width="3"/>
+                    <circle id="otp-ring" cx="18" cy="18" r="15" fill="none" stroke="var(--cyan)" stroke-width="3"
+                        stroke-dasharray="94.2" stroke-dashoffset="0" stroke-linecap="round"
+                        transform="rotate(-90 18 18)" style="transition:stroke-dashoffset 1s linear, stroke 0.3s"/>
+                </svg>
+                <span id="otp-secs" class="otp-secs">60</span>
+            </div>
+        </div>
+
+
+        <div id="rules-list"></div>
+    </div>
+
+    <!-- ══ VICTORY ══ -->
+    <div id="screen-victory">
+        <div class="canvas-wrap"><canvas id="matrix-canvas"></canvas></div>
+
+        <p class="vic-eyebrow">// you actually did it. wow.</p>
+        <h1 class="vic-title">YOU WIN!</h1>
+        <p class="vic-subtitle">// that password is absolutely unhinged. we respect it.</p>
+
+        <div class="vic-card">
+            <p class="vic-pw-label">YOUR LEGENDARY PASSWORD</p>
+            <div id="vpr-pw"></div>
+
+            <div class="vic-stats">
+                <div class="vic-stat">
+                    <span class="vic-stat-num" id="vic-time">—</span>
+                    <span class="vic-stat-label">TIME TAKEN</span>
+                </div>
+                <div class="vic-stat">
+                    <span class="vic-stat-num" id="vic-len">—</span>
+                    <span class="vic-stat-label">CHARACTERS</span>
+                </div>
+                <div class="vic-stat">
+                    <span class="vic-stat-num" id="vic-entropy">—</span>
+                    <span class="vic-stat-label">STRENGTH SCORE</span>
+                </div>
+            </div>
+
+            <button class="reset-btn" onclick="location.reload()"><span>↺ PLAY AGAIN</span></button>
+        </div>
+    </div>
+<!-- ══ FLOATING CALCULATOR ══ -->
+<button class="calc-fab" id="calc-fab" onclick="toggleCalc()" title="You're going to need this 😅">
+    🧮
+    <span class="calc-fab-hint">need help?</span>
+</button>
+
+<div class="calc-panel" id="calc-panel">
+    <div class="calc-header">
+        <span class="calc-title">// calculator</span>
+        <span class="calc-subtitle" id="calc-quip">yes, we knew you'd need this</span>
+        <button class="calc-close" onclick="toggleCalc()">✕</button>
+    </div>
+    <div class="calc-display-wrap">
+        <div class="calc-expr" id="calc-expr">&nbsp;</div>
+        <div class="calc-display" id="calc-display">0</div>
+    </div>
+    <div class="calc-keys">
+        <button class="ck ck-fn" onclick="calcFn('AC')">AC</button>
+        <button class="ck ck-fn" onclick="calcFn('+/-')">+/-</button>
+        <button class="ck ck-fn" onclick="calcFn('%')">%</button>
+        <button class="ck ck-op" onclick="calcOp('/')">÷</button>
+
+        <button class="ck" onclick="calcNum('7')">7</button>
+        <button class="ck" onclick="calcNum('8')">8</button>
+        <button class="ck" onclick="calcNum('9')">9</button>
+        <button class="ck ck-op" onclick="calcOp('*')">×</button>
+
+        <button class="ck" onclick="calcNum('4')">4</button>
+        <button class="ck" onclick="calcNum('5')">5</button>
+        <button class="ck" onclick="calcNum('6')">6</button>
+        <button class="ck ck-op" onclick="calcOp('-')">−</button>
+
+        <button class="ck" onclick="calcNum('1')">1</button>
+        <button class="ck" onclick="calcNum('2')">2</button>
+        <button class="ck" onclick="calcNum('3')">3</button>
+        <button class="ck ck-op" onclick="calcOp('+')">+</button>
+
+        <button class="ck ck-zero" onclick="calcNum('0')">0</button>
+        <button class="ck" onclick="calcNum('.')">.</button>
+        <button class="ck ck-eq" onclick="calcEq()">=</button>
+    </div>
+    <div class="calc-tip" id="calc-tip">💡 Add up all the digits in your password to hit the target sum</div>
+</div>
+
+</div><!-- end #app -->
+
+<script>
+/* ═══════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════ */
+let PLAYER = {};
+let rulesUnlocked = 1, elapsedSecs = 0, timerInterval = null;
+let currentOTP = String(Math.floor(100000 + Math.random() * 900000));
+let RULES = [];
+let newlyUnlocked = new Set();
+let otpSecsLeft = 60, otpInterval = null;
+let otpRuleUnlocked = false; // tracks if the OTP rule is visible yet
+
+const OTP_QUIPS = [
+    "tick tock… your code just expired 💀",
+    "poof! new code. we are so sorry. 😬",
+    "surprise! fresh code. good luck. 🎲",
+    "your previous code has left the chat 👋",
+    "new code dropped. chaos resumes. 🔥",
+    "OTP reset. we genuinely apologise. 🙃",
+];
+
+function resetOTP() {
+    currentOTP = String(Math.floor(100000 + Math.random() * 900000));
+    otpSecsLeft = 60;
+    // rebuild rules so the new OTP is baked in
+    RULES = buildRules();
+    renderRules();
+    onPasswordInput(); // re-check everything with new OTP
+    const quip = OTP_QUIPS[Math.floor(Math.random() * OTP_QUIPS.length)];
+    showToast('🔄 ' + quip);
+    updateOTPBanner();
+}
+
+function startOTPCountdown() {
+    otpInterval = setInterval(() => {
+        otpSecsLeft--;
+        updateOTPBanner();
+        if (otpSecsLeft <= 0) resetOTP();
+    }, 1000);
+}
+
+function updateOTPBanner() {
+    // only show banner once the OTP rule has been unlocked
+    const otpRuleIndex = RULES.findIndex(r => r.id === 'otp');
+    if (otpRuleIndex === -1 || otpRuleIndex >= rulesUnlocked) return;
+
+    const banner = document.getElementById('otp-banner');
+    banner.classList.remove('hidden');
+
+    const secsEl = document.getElementById('otp-secs');
+    const ring = document.getElementById('otp-ring');
+    const textEl = document.getElementById('otp-banner-text');
+
+    secsEl.textContent = otpSecsLeft;
+    const pct = otpSecsLeft / 60;
+    const circumference = 94.2;
+    ring.style.strokeDashoffset = circumference * (1 - pct);
+    ring.style.stroke = otpSecsLeft <= 10 ? 'var(--red)' : otpSecsLeft <= 20 ? 'var(--amber)' : 'var(--cyan)';
+    secsEl.style.color = otpSecsLeft <= 10 ? 'var(--red)' : otpSecsLeft <= 20 ? 'var(--amber)' : 'var(--cyan)';
+
+    if (otpSecsLeft <= 10) {
+        textEl.innerHTML = `<strong style="color:var(--red)">Code expires in ${otpSecsLeft}s</strong> — update your password NOW 😱`;
+    } else if (otpSecsLeft <= 20) {
+        textEl.innerHTML = `Code <strong style="color:var(--amber)">${currentOTP}</strong> expires in ${otpSecsLeft}s — you might want to hurry`;
+    } else {
+        textEl.innerHTML = `Your code is <strong style="color:var(--cyan)">${currentOTP}</strong> — resets in ${otpSecsLeft}s`;
+    }
+}
+
+/* ═══════════════════════════════════════════
+   CALCULATOR
+═══════════════════════════════════════════ */
+let calcCurrent = '0', calcPrev = '', calcOperator = null, calcFresh = false;
+
+const CALC_QUIPS = [
+    "yes, we knew you'd need this 😏",
+    "no shame. math is hard. 🧮",
+    "everyone opens this. you're not alone.",
+    "the calculator of shame™",
+    "sponsored by rule #13 💀",
+    "we built this just for that digit sum 😅",
+    "your fingers: typing. your brain: using calc.",
+];
+
+function toggleCalc() {
+    const panel = document.getElementById('calc-panel');
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open')) {
+        const q = document.getElementById('calc-quip');
+        q.textContent = CALC_QUIPS[Math.floor(Math.random() * CALC_QUIPS.length)];
+        updateCalcTip();
+    }
+}
+
+function updateCalcTip() {
+    const tip = document.getElementById('calc-tip');
+    const pw = document.getElementById('pw-input')?.value || '';
+    if (!pw) {
+        tip.textContent = '💡 Add up all the digits in your password to hit the target sum';
+        return;
+    }
+    const digits = pw.replace(/\D/g,'').split('').map(Number);
+    if (digits.length === 0) {
+        tip.textContent = '💡 No digits in your password yet!';
+        return;
+    }
+    const sum = digits.reduce((a,b) => a+b, 0);
+    const target = 42 + currentOTP.split('').reduce((a,d) => a+parseInt(d), 0);
+    const diff = target - sum;
+    if (diff === 0) {
+        tip.textContent = `✅ Digits sum to ${sum} — that's exactly ${target}! You got it!`;
+    } else if (diff > 0) {
+        tip.textContent = `Your digits sum to ${sum}. You need ${target}. Add ${diff} more. (hint: just add a ${diff} somewhere 😉)`;
+    } else {
+        tip.textContent = `Your digits sum to ${sum}. Too much by ${Math.abs(diff)}. Remove some digits or swap them for smaller ones.`;
+    }
+}
+
+function updateCalcDisplay() {
+    const d = document.getElementById('calc-display');
+    const e = document.getElementById('calc-expr');
+    d.textContent = calcCurrent;
+    d.className = 'calc-display';
+    e.textContent = calcPrev && calcOperator ? `${calcPrev} ${calcOperator}` : '\u00a0';
+}
+
+function calcNum(n) {
+    if (calcFresh) { calcCurrent = ''; calcFresh = false; }
+    if (n === '.' && calcCurrent.includes('.')) return;
+    if (calcCurrent === '0' && n !== '.') calcCurrent = n;
+    else calcCurrent += n;
+    updateCalcDisplay();
+}
+
+function calcOp(op) {
+    calcPrev = calcCurrent;
+    calcOperator = op;
+    calcFresh = true;
+    updateCalcDisplay();
+}
+
+function calcEq() {
+    if (!calcOperator || !calcPrev) return;
+    try {
+        const result = Function(`'use strict'; return (${calcPrev} ${calcOperator} ${calcCurrent})`)();
+        calcCurrent = String(parseFloat(result.toFixed(10)));
+        calcPrev = ''; calcOperator = null; calcFresh = true;
+        updateCalcDisplay();
+    } catch(e) {
+        document.getElementById('calc-display').textContent = 'Error';
+        document.getElementById('calc-display').className = 'calc-display error';
+    }
+}
+
+function calcFn(fn) {
+    const n = parseFloat(calcCurrent);
+    if (fn === 'AC') { calcCurrent = '0'; calcPrev = ''; calcOperator = null; calcFresh = false; }
+    else if (fn === '+/-') calcCurrent = String(-n);
+    else if (fn === '%') calcCurrent = String(n / 100);
+    updateCalcDisplay();
+}
+
+/* ═══════════════════════════════════════════
+   RULES
+═══════════════════════════════════════════ */
+function buildRules() {
+    const n = PLAYER.name.toLowerCase();
+    const y = PLAYER.year;
+    const p = PLAYER.pet.toLowerCase();
+    const c = PLAYER.city.toLowerCase();
+
+    const romanNumerals = ['I','V','X','L','C','D','M'];
+    const nato = ['alpha','bravo','charlie','delta','echo','foxtrot','golf','hotel'];
+
+    return [
+        {
+            id: 'len8',
+            label: () => 'Your password must be at least <strong>8 characters</strong> long. "password" is 8 characters. Please don\'t use "password". 🙏',
+            check: pw => pw.length >= 8
+        },
+        {
+            id: 'number',
+            label: () => 'Add a <strong>number</strong>. Any number. Your lucky number, your age, how many regrets you have — dealer\'s choice.',
+            check: pw => /\d/.test(pw)
+        },
+        {
+            id: 'upper',
+            label: () => 'Use at least one <strong>CAPITAL letter</strong>. LIKE YOU\'RE TEXTING YOUR MUM WHEN YOU\'RE LATE.',
+            check: pw => /[A-Z]/.test(pw)
+        },
+        {
+            id: 'special',
+            label: () => 'Add one of these: <strong>! @ # $ % ^ & *</strong> — pretend you\'re a cartoon character swearing. @#$%!',
+            check: pw => /[!@#$%^&*()]/.test(pw)
+        },
+        {
+            id: 'noname',
+            label: () => `Your own name — <strong>"${PLAYER.name}"</strong> — is literally the first thing anyone would try. Take it out! 😂`,
+            check: pw => !pw.toLowerCase().includes(n)
+        },
+        {
+            id: 'noyear',
+            label: () => `Remove your birth year <strong>${PLAYER.year}</strong>. Hackers know how old you are. It's creepy but true. 👀`,
+            check: pw => !pw.includes(y)
+        },
+        {
+            id: 'nopet',
+            label: () => `We love <strong>${PLAYER.pet}</strong> too, but they can't be in your password anymore. They've been compromised. Sorry. 🐾`,
+            check: pw => !pw.toLowerCase().includes(p)
+        },
+        {
+            id: 'nocity',
+            label: () => `<strong>${PLAYER.city}</strong> is a great city but a terrible password ingredient. Out it goes! 🏙️`,
+            check: pw => !pw.toLowerCase().includes(c)
+        },
+        {
+            id: 'len12',
+            label: () => 'Okay, stepping it up — your password needs to be at least <strong>12 characters</strong>. Think of it as a password with a little extra padding. 📏',
+            check: pw => pw.length >= 12
+        },
+        {
+            id: 'nokeyboard',
+            label: () => 'No lazy keyboard runs like <strong>qwerty, asdfg, or 12345</strong>. Your fingers are bored, not your brain. Use your brain! 🧠',
+            check: pw => !['qwerty','asdfg','12345','67890','zxcvb'].some(w => pw.toLowerCase().includes(w))
+        },
+        {
+            id: 'hex',
+            label: () => 'Include a <strong>hex pair</strong> — 2 characters that are only numbers or the letters A, B, C, D, E, or F (like A1, 4F, or 2C). You\'re a hacker now. Own it. 💻',
+            check: pw => /[0-9A-Fa-f]{2}/.test(pw)
+        },
+        {
+            id: 'otp',
+            label: () => `📱 Your one-time code just arrived! Slip this into your password: <strong style="color:var(--cyan);font-size:1.15em;letter-spacing:3px">${currentOTP}</strong> — yes, the whole 6-digit thing.`,
+            check: pw => pw.includes(currentOTP)
+        },
+        {
+            id: 'checksum',
+            label: () => {
+                const target = 42 + currentOTP.split('').reduce((a,d)=>a+parseInt(d),0);
+                return `🧮 All the digits in your password must add up to exactly <strong>${target}</strong>. Yes, we're serious. Get your calculator out. We'll wait right here.`;
+            },
+            check: pw => {
+                const target = 42 + currentOTP.split('').reduce((a,d)=>a+parseInt(d),0);
+                const sum = pw.replace(/\D/g,'').split('').map(Number).reduce((a,b)=>a+b,0);
+                return pw.replace(/\D/g,'').length > 0 && sum === target;
+            }
+        },
+        {
+            id: 'allcaps',
+            label: () => 'Your password needs at least one word in <strong>ALL CAPS</strong> (3+ letters). GO AHEAD. SCREAM A LITTLE. YOU\'VE EARNED IT. 📢',
+            check: pw => /[A-Z]{3,}/.test(pw)
+        },
+        {
+            id: 'roman',
+            label: () => 'Add a <strong>Roman numeral</strong> — I, V, X, L, C, D, or M. Julius Caesar didn\'t die for nothing. 🏛️',
+            check: pw => romanNumerals.some(r => pw.includes(r))
+        },
+        {
+            id: 'nato',
+            label: () => 'Your password must include a <strong>NATO word</strong> like alpha, bravo, charlie, delta, or echo. You\'ve watched enough movies. 🪖',
+            check: pw => nato.some(w => pw.toLowerCase().includes(w))
+        },
+        {
+            id: 'len18',
+            label: () => 'We need at least <strong>18 characters</strong> now. Your password should basically be a short sentence at this point. Or a cry for help. Both work. 😅',
+            check: pw => pw.length >= 18
+        },
+        {
+            id: 'startend',
+            label: () => 'Your password must <strong>start AND end with a letter</strong>. Numbers and symbols are welcome in the middle — like a letter sandwich with weird fillings. 🥪',
+            check: pw => pw.length > 0 && /[a-zA-Z]/.test(pw[0]) && /[a-zA-Z]/.test(pw[pw.length-1])
+        },
+        {
+            id: 'norepeats',
+            label: () => 'No <strong>3 of the same character in a row</strong> (like aaa or 111). We can see you pressing the key repeatedly. Stop it. 😤',
+            check: pw => !/(.)\1{2,}/.test(pw)
+        },
+        {
+            id: 'prime',
+            label: () => {
+                const len = document.getElementById('pw-input')?.value.length || 0;
+                const isPrime = n => { if(n<2) return false; for(let i=2;i<=Math.sqrt(n);i++) if(n%i===0) return false; return true; };
+                return `Your password length must be a <strong>prime number</strong> (2, 3, 5, 7, 11, 13, 17, 19, 23, 29…). Yours is <strong>${len}</strong> right now. ${isPrime(len) ? '✅ That\'s prime!' : '❌ Not prime. Adjust by 1 or 2 characters.'}`;
+            },
+            check: pw => {
+                const n = pw.length;
+                if (n < 2) return false;
+                for (let i = 2; i <= Math.sqrt(n); i++) if (n % i === 0) return false;
+                return true;
+            }
+        },
+        {
+            id: 'palindrome',
+            label: () => 'Include a <strong>palindrome</strong> — a word that reads the same forwards and backwards. Like "aba", "noon", "racecar", or "level". Show off. 🪞',
+            check: pw => {
+                for (let len = 3; len <= pw.length; len++) {
+                    for (let i = 0; i <= pw.length - len; i++) {
+                        const sub = pw.substring(i, i + len).toLowerCase();
+                        if (sub === sub.split('').reverse().join('')) return true;
+                    }
+                }
+                return false;
+            }
+        },
+    ];
+}
+
+/* ═══════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════ */
+function startGame() {
+    const name = document.getElementById('inp-name').value.trim();
+    const year = document.getElementById('inp-year').value.trim();
+    const pet  = document.getElementById('inp-pet').value.trim();
+    const city = document.getElementById('inp-city').value.trim();
+    if (!name || !year || !pet || !city) return showToast('// fill in all 4 fields first!');
+    PLAYER = { name, year, pet, city };
+    RULES = buildRules();
+    document.getElementById('screen-intro').style.display = 'none';
+    document.getElementById('screen-game').style.display = 'block';
+    document.getElementById('progress-label').textContent = `0 / ${RULES.length}`;
+    startTimer();
+    startOTPCountdown();
+    document.getElementById('calc-fab').classList.add('visible');
+    renderRules();
+    document.getElementById('pw-input').focus();
+}
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        elapsedSecs++;
+        const m = Math.floor(elapsedSecs / 60), s = elapsedSecs % 60;
+        document.getElementById('timer').textContent =
+            `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }, 1000);
+}
+
+/* ═══════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════ */
+function renderRules() {
+    const container = document.getElementById('rules-list');
+    const pw = document.getElementById('pw-input').value;
+    container.innerHTML = '';
+
+    const visible = RULES.slice(0, rulesUnlocked).map((rule, i) => ({
+        rule, i, pass: rule.check(pw)
+    }));
+
+    // failing first, then passing — within each group preserve original order
+    const sorted = [
+        ...visible.filter(r => !r.pass),
+        ...visible.filter(r =>  r.pass),
+    ];
+
+    sorted.forEach(({ rule, i, pass }) => {
+        const card = document.createElement('div');
+        const isNew = newlyUnlocked.has(rule.id);
+        card.className = `rule-card ${pass ? 'passing' : 'failing'}${isNew ? ' new-unlock' : ''}`;
+        card.innerHTML = `
+            <div class="rule-num">// rule ${String(i+1).padStart(2,'0')}</div>
+            <div class="rule-inner">
+                <span class="rule-text">${rule.label()}</span>
+                <span class="rule-icon">${pass ? '✓' : '✗'}</span>
+            </div>`;
+        container.appendChild(card);
+    });
+    newlyUnlocked.clear();
+}
+
+/* ═══════════════════════════════════════════
+   INPUT HANDLER
+═══════════════════════════════════════════ */
+function onPasswordInput() {
+    const pw = document.getElementById('pw-input').value;
+    const len = pw.length;
+
+    // Entropy & length display
+    document.getElementById('entropy').textContent = Math.floor(len * 6.2 + ((/[A-Z]/.test(pw)?10:0) + (/[!@#$%^&*]/.test(pw)?15:0)));
+    document.getElementById('pw-len').textContent = len;
+
+    // Crack time
+    const crackEl = document.getElementById('crack-time');
+    if (len === 0) { crackEl.textContent = 'IDLE'; crackEl.style.color = 'var(--muted)'; }
+    else if (len < 8) { crackEl.textContent = 'HACKED IN 0.001s'; crackEl.style.color = 'var(--red)'; }
+    else if (len < 12) { crackEl.textContent = 'A FEW HOURS'; crackEl.style.color = 'var(--amber)'; }
+    else if (len < 18) { crackEl.textContent = 'DECADES'; crackEl.style.color = 'var(--amber)'; }
+    else { crackEl.textContent = 'UNCRACKABLE 💪'; crackEl.style.color = 'var(--green)'; }
+
+    // Strength bars
+    updateStrength(pw);
+
+    // Unlock new rules
+    let unlocked = false;
+    while (rulesUnlocked < RULES.length && RULES.slice(0, rulesUnlocked).every(r => r.check(pw))) {
+        newlyUnlocked.add(RULES[rulesUnlocked].id);
+        rulesUnlocked++;
+        unlocked = true;
+    }
+    if (unlocked) {
+        showToast('// 🔓 new rule unlocked — good luck with this one');
+        updateOTPBanner(); // show banner if OTP rule just became visible
+    }
+
+    // Victory check
+    if (rulesUnlocked === RULES.length && RULES.every(r => r.check(pw))) {
+        clearInterval(timerInterval);
+        clearInterval(otpInterval);
+        setTimeout(() => showVictory(pw), 200);
+        return;
+    }
+
+    renderRules();
+    updateOTPBanner();
+    updateCalcTip();
+    const pct = (rulesUnlocked / RULES.length) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('progress-label').textContent = `${rulesUnlocked} / ${RULES.length}`;
+}
+
+function updateStrength(pw) {
+    const bars = document.querySelectorAll('.strength-bar');
+    const label = document.getElementById('strength-label');
+    const score = [
+        pw.length >= 8, pw.length >= 12, pw.length >= 18,
+        /[A-Z]/.test(pw), /[a-z]/.test(pw), /\d/.test(pw),
+        /[!@#$%^&*]/.test(pw), pw.length >= 24
+    ].filter(Boolean).length;
+
+    bars.forEach((b, i) => {
+        b.className = 'strength-bar';
+        if (i < score) {
+            b.classList.add(score <= 2 ? 'lit-red' : score <= 5 ? 'lit-amber' : 'lit-green');
+        }
+    });
+
+    const levels = ['EMPTY','OH NO','WEAK','WEAK','GETTING THERE','DECENT','STRONG','STRONG','LEGENDARY 🔥'];
+    const colors = ['var(--muted)','var(--red)','var(--red)','var(--red)','var(--amber)','var(--amber)','var(--green)','var(--green)','var(--cyan)'];
+    label.textContent = levels[score] || 'ELITE';
+    label.style.color = colors[score] || 'var(--cyan)';
+}
+
+/* ═══════════════════════════════════════════
+   VICTORY
+═══════════════════════════════════════════ */
+function showVictory(pw) {
+    document.getElementById('screen-game').style.display = 'none';
+    document.getElementById('screen-victory').style.display = 'block';
+    document.getElementById('vpr-pw').textContent = pw;
+    document.getElementById('calc-fab').style.display = 'none';
+    document.getElementById('calc-panel').classList.remove('open');
+    clearInterval(otpInterval);
+
+    const m = Math.floor(elapsedSecs/60), s = elapsedSecs%60;
+    document.getElementById('vic-time').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    document.getElementById('vic-len').textContent = pw.length;
+    document.getElementById('vic-entropy').textContent = Math.floor(pw.length * 6.2);
+
+    startMatrixRain();
+}
+
+/* ═══════════════════════════════════════════
+   MATRIX RAIN
+═══════════════════════════════════════════ */
+function startMatrixRain() {
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const cols = Math.floor(canvas.width / 16);
+    const drops = Array(cols).fill(1);
+    const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノABCDEF';
+
+    setInterval(() => {
+        ctx.fillStyle = 'rgba(2,4,9,0.05)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#00ff88';
+        ctx.font = '14px Fira Code';
+        drops.forEach((y, i) => {
+            const text = chars[Math.floor(Math.random() * chars.length)];
+            ctx.fillText(text, i * 16, y * 16);
+            if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        });
+    }, 50);
+}
+
+/* ═══════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════ */
+let toastTimeout;
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => t.classList.remove('show'), 2800);
+}
+</script>
+</body>
+</html>
